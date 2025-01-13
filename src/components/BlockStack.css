@@ -1,0 +1,12 @@
+.block-stack {
+    width: 33.33%;
+    height: 100%;
+  }
+  
+  .left-stack {
+    margin-right: auto;
+  }
+  
+  .right-stack {
+    margin-left: auto;
+  }
