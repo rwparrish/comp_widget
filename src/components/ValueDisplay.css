@@ -1,0 +1,19 @@
+.value-display {
+    font-size: 48px;
+    color: rgba(155, 230, 255, 0.9);
+    text-align: center;
+    font-weight: bold;
+    text-shadow: 0 0 10px rgba(155, 230, 255, 0.5);
+    position: absolute;
+    bottom: -80px;
+    transform: translateX(-50%);
+    z-index: 1;
+  }
+  
+  .value-display.left {
+    left: 33.33%;
+  }
+  
+  .value-display.right {
+    left: 66.67%;
+  }

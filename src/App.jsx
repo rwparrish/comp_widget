@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import BlockStack from './components/BlockStack';
+import ValueDisplay from './components/ValueDisplay';
 import './App.css';
 
 function App() {
@@ -41,6 +42,8 @@ function App() {
           onBlockAdd={handleStackClick}
           onBlockRemove={handleBlockRemove}
         />
+        <ValueDisplay value={leftCount} position="left" />
+        <ValueDisplay value={rightCount} position="right" />
       </div>
     </div>
   );
