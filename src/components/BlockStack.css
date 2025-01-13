@@ -1,6 +1,9 @@
 .block-stack {
     width: 33.33%;
     height: 100%;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
   }
   
   .left-stack {
@@ -9,4 +12,12 @@
   
   .right-stack {
     margin-left: auto;
+  }
+
+  .cubes-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+    padding: 20px;
   }
