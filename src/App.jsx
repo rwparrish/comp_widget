@@ -3,6 +3,7 @@ import BlockStack from './components/BlockStack';
 import ValueDisplay from './components/ValueDisplay';
 import './App.css';
 import CompLine from './components/CompLine';
+import Comparator from './components/Comparator';
 
 function App() {
   const [leftCount, setLeftCount] = useState(0);
@@ -37,6 +38,7 @@ function App() {
           onBlockAdd={handleStackClick}
           onBlockRemove={handleBlockRemove}
         />
+        <Comparator />
         <BlockStack 
           position="right" 
           blockCount={rightCount}
