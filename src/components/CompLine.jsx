@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './CompLine.css';
 
-const CompLine = () => {
+const CompLine = ({ autoDrawLines }) => {
   const [dotPositions, setDotPositions] = useState({
     left: { top: null, bottom: null },
     right: { top: null, bottom: null }
@@ -21,12 +21,15 @@ const CompLine = () => {
         const leftBlocks = leftStack.querySelectorAll('.block-container');
         const rightBlocks = rightStack.querySelectorAll('.block-container');
 
+        // Reset lines when block counts change
+        setPersistentLines([]);
+
         setShowDots({
           left: leftBlocks.length > 0,
           right: rightBlocks.length > 0
         });
 
-        const DOT_OFFSET = 40; // Distance from blocks
+        const DOT_OFFSET = 40;
 
         if (leftBlocks.length > 0) {
           const leftTopBlock = leftBlocks[leftBlocks.length - 1].getBoundingClientRect();

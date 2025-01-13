@@ -45,7 +45,7 @@ function App() {
           onBlockAdd={handleStackClick}
           onBlockRemove={handleBlockRemove}
         />
-        {showComparison && <Comparator />}
+        <Comparator />
         <BlockStack 
           position="right" 
           blockCount={rightCount}

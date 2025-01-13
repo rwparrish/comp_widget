@@ -30,3 +30,23 @@
   height: 16px;
   cursor: pointer;
 }
+
+.control-button {
+  background: rgba(155, 230, 255, 0.1);
+  border: 1px solid rgba(155, 230, 255, 0.3);
+  color: rgba(155, 230, 255, 0.9);
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.control-button:hover {
+  background: rgba(155, 230, 255, 0.2);
+  border-color: rgba(155, 230, 255, 0.5);
+}
+
+.control-button:active {
+  transform: scale(0.98);
+}
