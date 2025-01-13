@@ -4,10 +4,13 @@ import ValueDisplay from './components/ValueDisplay';
 import './App.css';
 import CompLine from './components/CompLine';
 import Comparator from './components/Comparator';
+import ControlPanel from './components/ControlPanel';
+import './App.css';
 
 function App() {
   const [leftCount, setLeftCount] = useState(0);
   const [rightCount, setRightCount] = useState(0);
+  const [showComparison, setShowComparison] = useState(true)
 
   const handleBlockAdd = (position) => {
     if (position === 'left' && leftCount < 10) {
@@ -31,6 +34,10 @@ function App() {
 
   return (
     <div className="app">
+      <ControlPanel 
+        showComparison={showComparison}
+        setShowComparison={setShowComparison}
+      />
       <div className="stacks-container">
         <BlockStack 
           position="left" 
@@ -38,7 +45,7 @@ function App() {
           onBlockAdd={handleStackClick}
           onBlockRemove={handleBlockRemove}
         />
-        <Comparator />
+        {showComparison && <Comparator />}
         <BlockStack 
           position="right" 
           blockCount={rightCount}
