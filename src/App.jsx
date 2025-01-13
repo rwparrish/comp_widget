@@ -1,13 +1,46 @@
-import React from 'react';
+import React, { useState } from 'react';
 import BlockStack from './components/BlockStack';
 import './App.css';
 
 function App() {
+  const [leftCount, setLeftCount] = useState(2);
+  const [rightCount, setRightCount] = useState(1);
+
+  const handleBlockAdd = (position) => {
+    if (position === 'left' && leftCount < 10) {
+      setLeftCount(prev => prev + 1);
+    } else if (position === 'right' && rightCount < 10) {
+      setRightCount(prev => prev + 1);
+    }
+  };
+
+  const handleBlockRemove = (position) => {
+    if (position === 'left' && leftCount > 0) {
+      setLeftCount(prev => prev - 1);
+    } else if (position === 'right' && rightCount > 0) {
+      setRightCount(prev => prev - 1);
+    }
+  };
+
+  const handleStackClick = (position) => {
+    handleBlockAdd(position);
+  };
+
   return (
     <div className="app">
-      <div className="block-stack-container">
-        <BlockStack position="left" />
-        <BlockStack position="right" />
+      <div className="stacks-container">
+        <BlockStack 
+          position="left" 
+          blockCount={leftCount}
+          onBlockAdd={() => handleStackClick('left')}
+          onBlockRemove={handleBlockRemove}
+        />
+        <BlockStack 
+          position="right" 
+          blockCount={rightCount}
+          onBlockAdd={() => handleStackClick('right')}
+          onBlockRemove={handleBlockRemove}
+        />
       </div>
     </div>
   );

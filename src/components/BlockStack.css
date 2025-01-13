@@ -20,7 +20,14 @@
   .blocks-container {
     display: flex;
     flex-direction: column;
-    align-items: center;
     height: 100%;
     padding: 20px;
+  }
+  
+  .blocks-wrapper {
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: flex-start;
+    height: 100%;
+    margin-top: auto;
   }
