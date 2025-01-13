@@ -13,51 +13,62 @@ const CompLine = () => {
 
   useEffect(() => {
     const updateDotsPosition = () => {
-      const stacks = document.querySelectorAll('.block-stack');
-      const leftStack = stacks[0];
-      const rightStack = stacks[1];
+      requestAnimationFrame(() => {
+        const stacks = document.querySelectorAll('.block-stack');
+        const leftStack = stacks[0];
+        const rightStack = stacks[1];
 
-      const leftBlocks = leftStack.querySelectorAll('.block-container');
-      const rightBlocks = rightStack.querySelectorAll('.block-container');
+        const leftBlocks = leftStack.querySelectorAll('.block-container');
+        const rightBlocks = rightStack.querySelectorAll('.block-container');
 
-      setShowDots({
-        left: leftBlocks.length > 0,
-        right: rightBlocks.length > 0
+        setShowDots({
+          left: leftBlocks.length > 0,
+          right: rightBlocks.length > 0
+        });
+
+        const DOT_OFFSET = 40; // Distance from blocks
+
+        if (leftBlocks.length > 0) {
+          const leftTopBlock = leftBlocks[leftBlocks.length - 1].getBoundingClientRect();
+          const leftBottomBlock = leftBlocks[0].getBoundingClientRect();
+          
+          setDotPositions(prev => ({
+            ...prev,
+            left: {
+              top: window.scrollY + leftTopBlock.top - DOT_OFFSET,
+              bottom: window.scrollY + leftBottomBlock.bottom + DOT_OFFSET
+            }
+          }));
+        }
+
+        if (rightBlocks.length > 0) {
+          const rightTopBlock = rightBlocks[rightBlocks.length - 1].getBoundingClientRect();
+          const rightBottomBlock = rightBlocks[0].getBoundingClientRect();
+          
+          setDotPositions(prev => ({
+            ...prev,
+            right: {
+              top: window.scrollY + rightTopBlock.top - DOT_OFFSET,
+              bottom: window.scrollY + rightBottomBlock.bottom + DOT_OFFSET
+            }
+          }));
+        }
       });
-
-      if (leftBlocks.length > 0) {
-        const leftTopBlock = leftBlocks[leftBlocks.length - 1];
-        const leftBottomBlock = leftBlocks[0];
-        setDotPositions(prev => ({
-          ...prev,
-          left: {
-            top: leftTopBlock.getBoundingClientRect().top - 40,
-            bottom: leftBottomBlock.getBoundingClientRect().bottom + 40
-          }
-        }));
-      }
-
-      if (rightBlocks.length > 0) {
-        const rightTopBlock = rightBlocks[rightBlocks.length - 1];
-        const rightBottomBlock = rightBlocks[0];
-        setDotPositions(prev => ({
-          ...prev,
-          right: {
-            top: rightTopBlock.getBoundingClientRect().top - 40,
-            bottom: rightBottomBlock.getBoundingClientRect().bottom + 40
-          }
-        }));
-      }
     };
 
     updateDotsPosition();
+    
     const observer = new MutationObserver(updateDotsPosition);
+    window.addEventListener('scroll', updateDotsPosition, { passive: true });
     
     document.querySelectorAll('.block-stack').forEach(stack => {
       observer.observe(stack, { childList: true, subtree: true });
     });
 
-    return () => observer.disconnect();
+    return () => {
+      observer.disconnect();
+      window.removeEventListener('scroll', updateDotsPosition);
+    };
   }, []);
 
   const handleMouseDown = (e, position, type) => {
@@ -152,6 +163,7 @@ const CompLine = () => {
             data-type="top"
             data-side="left"
             style={{
+              position: 'absolute',
               left: '33.33%',
               top: dotPositions.left.top,
               transform: 'translate(-50%, -50%)'
@@ -163,6 +175,7 @@ const CompLine = () => {
             data-type="bottom"
             data-side="left"
             style={{
+              position: 'absolute',
               left: '33.33%',
               top: dotPositions.left.bottom,
               transform: 'translate(-50%, -50%)'
@@ -180,6 +193,7 @@ const CompLine = () => {
             data-type="top"
             data-side="right"
             style={{
+              position: 'absolute',
               right: '33.33%',
               top: dotPositions.right.top,
               transform: 'translate(50%, -50%)'
@@ -191,6 +205,7 @@ const CompLine = () => {
             data-type="bottom"
             data-side="right"
             style={{
+              position: 'absolute',
               right: '33.33%',
               top: dotPositions.right.bottom,
               transform: 'translate(50%, -50%)'
@@ -200,6 +215,7 @@ const CompLine = () => {
         </>
       )}
 
+      {/* SVG container for all lines */}
       <svg className="comp-line-svg">
         {persistentLines.map((line, index) => (
           <line
