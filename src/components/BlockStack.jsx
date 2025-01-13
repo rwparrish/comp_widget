@@ -96,9 +96,15 @@ const BlockStack = ({
     >
       <div className="blocks-wrapper">
         <div className="blocks-container">
+          {mode === 'drawCompare' && count > 0 && (
+            <div className="comparison-dot top" />
+          )}
           {Array(count).fill(null).map((_, index) => (
             <Block key={index} />
           ))}
+          {mode === 'drawCompare' && count > 0 && (
+            <div className="comparison-dot bottom" />
+          )}
         </div>
       </div>
       {mode === 'addRemove' && count < maxBlocks && (

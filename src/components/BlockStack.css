@@ -17,6 +17,7 @@
   align-items: center;
   justify-content: center;
   min-height: 400px;
+  padding: 40px 0;
 }
 
 .blocks-container {
@@ -25,4 +26,53 @@
   align-items: center;
   gap: 20px;
   padding: 20px 0;
+  position: relative;
+}
+
+.comparison-dot {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background: rgba(155, 230, 255, 0.8);
+  border-radius: 50%;
+  left: 50%;
+  transform: translateX(-50%);
+  box-shadow: 0 0 10px rgba(155, 230, 255, 0.5);
+  z-index: 2;
+}
+
+.comparison-dot.top {
+  bottom: calc(100% + 20px);
+}
+
+.comparison-dot.bottom {
+  top: calc(100% + 20px);
+}
+
+.comparison-dot::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 6px;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 50%;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: translate(-50%, -50%) scale(0.8);
+    opacity: 0.5;
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.2);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(0.8);
+    opacity: 0.5;
+  }
 }
