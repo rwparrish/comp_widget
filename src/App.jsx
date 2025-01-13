@@ -5,8 +5,10 @@ import './App.css';
 function App() {
   return (
     <div className="app">
-      <BlockStack position="left" />
-      <BlockStack position="right" />
+      <div className="block-stack-container">
+        <BlockStack position="left" />
+        <BlockStack position="right" />
+      </div>
     </div>
   );
 }

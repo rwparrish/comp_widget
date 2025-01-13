@@ -1,7 +1,13 @@
 .app {
-  display: flex;
-  justify-content: space-between;
   width: 100%;
   height: 100vh;
-  overflow: hidden;
+  /* overflow: hidden; */
+  /* position: relative; */
+}
+
+.block-stack-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: space-between;
 }

@@ -13,7 +13,7 @@ const COLORS = [
 const BlockStack = ({ position }) => {
   return (
     <div className={`block-stack ${position}-stack`}>
-       <div className="cubes-container">
+       <div className="blocks-container">
         {COLORS.map((color, index) => (
           <Block key={index} color={color} />
         ))}
