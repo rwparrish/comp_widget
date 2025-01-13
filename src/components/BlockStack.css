@@ -1,15 +1,17 @@
 .block-stack {
     width: 200px;
-    height: 100%;
-    padding: 20px;
+    height: 100vh;
     display: flex;
     flex-direction: column;
+    align-items: center;
+    justify-content: center;
     position: absolute;
+    top: 0;
   }
   
   .left-stack {
     left: 33.33%;
-    transform: translateX(-50%); 
+    transform: translateX(-50%);
   }
   
   .right-stack {
@@ -20,6 +22,8 @@
   .blocks-container {
     display: flex;
     flex-direction: column;
+    align-items: center;
+    justify-content: center;
     height: 100%;
     padding: 20px;
   }
@@ -27,7 +31,8 @@
   .blocks-wrapper {
     display: flex;
     flex-direction: column-reverse;
-    justify-content: flex-start;
-    height: 100%;
-    margin-top: auto;
+    align-items: center;
+    justify-content: center;
+    min-height: 100px;
+    width: 100%;
   }

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import BlockStack from './components/BlockStack';
 import ValueDisplay from './components/ValueDisplay';
 import './App.css';
+import CompLine from './components/CompLine';
 
 function App() {
   const [leftCount, setLeftCount] = useState(0);
@@ -44,6 +45,7 @@ function App() {
         />
         <ValueDisplay value={leftCount} position="left" />
         <ValueDisplay value={rightCount} position="right" />
+        <CompLine />
       </div>
     </div>
   );
