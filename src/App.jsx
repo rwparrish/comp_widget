@@ -1,61 +1,66 @@
 import React, { useState } from 'react';
 import BlockStack from './components/BlockStack';
-import ValueDisplay from './components/ValueDisplay';
-import './App.css';
 import CompLine from './components/CompLine';
 import Comparator from './components/Comparator';
 import ControlPanel from './components/ControlPanel';
+import EmptyStateGuide from './components/EmptyStateGuide';
 import './App.css';
 
 function App() {
-  const [leftCount, setLeftCount] = useState(0);
-  const [rightCount, setRightCount] = useState(0);
-  const [showComparison, setShowComparison] = useState(true)
+  const [currentMode, setCurrentMode] = useState('none');
+  const [leftStackCount, setLeftStackCount] = useState(0);
+  const [rightStackCount, setRightStackCount] = useState(0);
+  const [comparisonLines, setComparisonLines] = useState([]);
+  const [animatingComparison, setAnimatingComparison] = useState(false);
 
-  const handleBlockAdd = (position) => {
-    if (position === 'left' && leftCount < 10) {
-      setLeftCount(prev => prev + 1);
-    } else if (position === 'right' && rightCount < 10) {
-      setRightCount(prev => prev + 1);
+  const handleCountChange = (side, newCount) => {
+    if (side === 'left') {
+      setLeftStackCount(newCount);
+    } else {
+      setRightStackCount(newCount);
     }
   };
 
-  const handleBlockRemove = (position) => {
-    if (position === 'left' && leftCount > 0) {
-      setLeftCount(prev => prev - 1);
-    } else if (position === 'right' && rightCount > 0) {
-      setRightCount(prev => prev - 1);
+  const handlePlayAnimation = () => {
+    if (comparisonLines.length > 0) {
+      setAnimatingComparison(true);
     }
-  };
-
-  const handleStackClick = (position) => {
-    handleBlockAdd(position);
   };
 
   return (
     <div className="app">
-      <ControlPanel 
-        showComparison={showComparison}
-        setShowComparison={setShowComparison}
-      />
-      <div className="stacks-container">
-        <BlockStack 
-          position="left" 
-          blockCount={leftCount}
-          onBlockAdd={handleStackClick}
-          onBlockRemove={handleBlockRemove}
+      <div className="block-stacks-container">
+        <BlockStack
+          className="left-stack"
+          side="left"
+          count={leftStackCount}
+          position="left"
+          mode={currentMode}
+          onBlockCountChange={(count) => handleCountChange('left', count)}
         />
-        <Comparator />
-        <BlockStack 
-          position="right" 
-          blockCount={rightCount}
-          onBlockAdd={handleStackClick}
-          onBlockRemove={handleBlockRemove}
+        <BlockStack
+          className="right-stack"
+          side="right"
+          count={rightStackCount}
+          position="right"
+          mode={currentMode}
+          onBlockCountChange={(count) => handleCountChange('right', count)}
         />
-        <ValueDisplay value={leftCount} position="left" />
-        <ValueDisplay value={rightCount} position="right" />
-        <CompLine />
+        <CompLine
+          lines={comparisonLines}
+          animating={animatingComparison}
+        />
+        {leftStackCount === 0 && rightStackCount === 0 && <EmptyStateGuide />}
       </div>
+      <ControlPanel
+        currentMode={currentMode}
+        onModeChange={setCurrentMode}
+        leftCount={leftStackCount}
+        rightCount={rightStackCount}
+        onCountChange={handleCountChange}
+        canPlayAnimation={comparisonLines.length > 0 && !animatingComparison}
+        onPlayAnimation={handlePlayAnimation}
+      />
     </div>
   );
 }

@@ -8,13 +8,6 @@
     z-index: 50;
   }
   
-  .guide-text {
-    color: rgba(155, 230, 255, 0.7);
-    font-size: 24px;
-    text-shadow: 0 0 10px rgba(155, 230, 255, 0.3);
-    animation: pulse 2s infinite;
-  }
-  
   .guide-arrow {
     position: absolute;
     top: 50%;
@@ -33,12 +26,6 @@
   .guide-arrow.right {
     right: 25%;
     transform: translate(50%, -50%) rotate(135deg);
-  }
-  
-  @keyframes pulse {
-    0% { opacity: 0.5; }
-    50% { opacity: 1; }
-    100% { opacity: 0.5; }
   }
   
   @keyframes bounce {

@@ -1,52 +1,103 @@
 .control-panel {
   position: fixed;
-  top: 20px;
-  left: 50%;
-  transform: translateX(-50%);
+  bottom: 0;
+  left: 0;
+  right: 0;
   background: rgba(0, 0, 0, 0.8);
-  padding: 15px 25px;
-  border-radius: 10px;
-  border: 1px solid rgba(155, 230, 255, 0.3);
-  box-shadow: 0 0 20px rgba(155, 230, 255, 0.2);
-  backdrop-filter: blur(5px);
+  backdrop-filter: blur(10px);
+  border-top: 1px solid rgba(155, 230, 255, 0.3);
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
   z-index: 1000;
 }
 
-.control-group {
-  margin: 10px 0;
+.control-section {
+  display: flex;
+  align-items: center;
+  gap: 20px;
 }
 
-.control-panel label {
-  color: rgba(155, 230, 255, 0.9);
-  font-size: 14px;
+.count-inputs {
+  display: flex;
+  gap: 20px;
+}
+
+.input-group {
   display: flex;
   align-items: center;
   gap: 8px;
-  cursor: pointer;
 }
 
-.control-panel input[type="checkbox"] {
-  width: 16px;
-  height: 16px;
-  cursor: pointer;
+.input-group label {
+  color: rgba(155, 230, 255, 0.9);
+  font-size: 14px;
 }
 
-.control-button {
+.input-group input {
+  width: 60px;
   background: rgba(155, 230, 255, 0.1);
   border: 1px solid rgba(155, 230, 255, 0.3);
   color: rgba(155, 230, 255, 0.9);
-  padding: 6px 12px;
+  padding: 4px 8px;
   border-radius: 4px;
-  cursor: pointer;
   font-size: 14px;
+}
+
+.mode-selector {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.mode-selector label {
+  color: rgba(155, 230, 255, 0.9);
+  font-size: 14px;
+}
+
+.mode-selector select {
+  background: rgba(155, 230, 255, 0.1);
+  border: 1px solid rgba(155, 230, 255, 0.3);
+  color: rgba(155, 230, 255, 0.9);
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.animate-button {
+  background: rgba(155, 230, 255, 0.2);
+  border: 1px solid rgba(155, 230, 255, 0.4);
+  color: rgba(155, 230, 255, 0.9);
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
   transition: all 0.2s ease;
 }
 
-.control-button:hover {
-  background: rgba(155, 230, 255, 0.2);
-  border-color: rgba(155, 230, 255, 0.5);
+.animate-button:hover:not(.disabled) {
+  background: rgba(155, 230, 255, 0.3);
+  border-color: rgba(155, 230, 255, 0.6);
 }
 
-.control-button:active {
-  transform: scale(0.98);
+.animate-button.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+input:focus, select:focus {
+  outline: none;
+  border-color: rgba(155, 230, 255, 0.6);
+  box-shadow: 0 0 10px rgba(155, 230, 255, 0.3);
+}
+
+/* Add some spacing at the bottom of the app to account for the fixed panel */
+:root {
+  --control-panel-height: 80px;
+}
+
+.app {
+  padding-bottom: var(--control-panel-height);
 }

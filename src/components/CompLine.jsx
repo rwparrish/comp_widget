@@ -1,247 +1,110 @@
 import React, { useState, useEffect } from 'react';
 import './CompLine.css';
 
-const CompLine = ({ autoDrawLines }) => {
-  const [dotPositions, setDotPositions] = useState({
-    left: { top: null, bottom: null },
-    right: { top: null, bottom: null }
-  });
-  const [showDots, setShowDots] = useState({ left: false, right: false });
-  const [activeLine, setActiveLine] = useState(null);
-  const [persistentLines, setPersistentLines] = useState([]);
-  const [isDragging, setIsDragging] = useState(false);
+const CompLine = ({ 
+  startPoint,
+  endPoint,
+  type = 'student',
+  animating = false
+}) => {
+  const [animationProgress, setAnimationProgress] = useState(0);
 
   useEffect(() => {
-    const updateDotsPosition = () => {
-      requestAnimationFrame(() => {
-        const stacks = document.querySelectorAll('.block-stack');
-        const leftStack = stacks[0];
-        const rightStack = stacks[1];
-
-        const leftBlocks = leftStack.querySelectorAll('.block-container');
-        const rightBlocks = rightStack.querySelectorAll('.block-container');
-
-        // Reset lines when block counts change
-        setPersistentLines([]);
-
-        setShowDots({
-          left: leftBlocks.length > 0,
-          right: rightBlocks.length > 0
+    if (animating) {
+      setAnimationProgress(0);
+      const animate = () => {
+        setAnimationProgress(prev => {
+          if (prev >= 1) return 1;
+          return prev + 0.05;
         });
+      };
 
-        const DOT_OFFSET = 40;
+      const intervalId = setInterval(animate, 16); // ~60fps
+      return () => clearInterval(intervalId);
+    } else {
+      setAnimationProgress(1);
+    }
+  }, [animating]);
 
-        if (leftBlocks.length > 0) {
-          const leftTopBlock = leftBlocks[leftBlocks.length - 1].getBoundingClientRect();
-          const leftBottomBlock = leftBlocks[0].getBoundingClientRect();
-          
-          setDotPositions(prev => ({
-            ...prev,
-            left: {
-              top: window.scrollY + leftTopBlock.top - DOT_OFFSET,
-              bottom: window.scrollY + leftBottomBlock.bottom + DOT_OFFSET
-            }
-          }));
-        }
+  if (!startPoint || !endPoint) return null;
 
-        if (rightBlocks.length > 0) {
-          const rightTopBlock = rightBlocks[rightBlocks.length - 1].getBoundingClientRect();
-          const rightBottomBlock = rightBlocks[0].getBoundingClientRect();
-          
-          setDotPositions(prev => ({
-            ...prev,
-            right: {
-              top: window.scrollY + rightTopBlock.top - DOT_OFFSET,
-              bottom: window.scrollY + rightBottomBlock.bottom + DOT_OFFSET
-            }
-          }));
-        }
-      });
+  const getAnimatedPath = () => {
+    if (!animating || animationProgress === 1) {
+      return {
+        x1: startPoint.x,
+        y1: startPoint.y,
+        x2: endPoint.x,
+        y2: endPoint.y
+      };
+    }
+
+    return {
+      x1: startPoint.x,
+      y1: startPoint.y,
+      x2: startPoint.x + (endPoint.x - startPoint.x) * animationProgress,
+      y2: startPoint.y + (endPoint.y - startPoint.y) * animationProgress
     };
-
-    updateDotsPosition();
-    
-    const observer = new MutationObserver(updateDotsPosition);
-    window.addEventListener('scroll', updateDotsPosition, { passive: true });
-    
-    document.querySelectorAll('.block-stack').forEach(stack => {
-      observer.observe(stack, { childList: true, subtree: true });
-    });
-
-    return () => {
-      observer.disconnect();
-      window.removeEventListener('scroll', updateDotsPosition);
-    };
-  }, []);
-
-  const handleMouseDown = (e, position, type) => {
-    e.preventDefault();
-    const rect = e.currentTarget.getBoundingClientRect();
-    const startPoint = {
-      x: rect.left + rect.width / 2,
-      y: rect.top + rect.height / 2
-    };
-
-    setIsDragging(true);
-    setActiveLine({
-      start: startPoint,
-      end: { x: e.clientX, y: e.clientY },
-      type,
-      startSide: position,
-      snapped: false
-    });
   };
 
-  const handleMouseMove = (e) => {
-    if (!isDragging || !activeLine) return;
+  const snapToGrid = (point) => {
+    // Snap to 45-degree angles if close enough
+    const dx = endPoint.x - startPoint.x;
+    const dy = endPoint.y - startPoint.y;
+    const angle = Math.atan2(dy, dx) * (180 / Math.PI);
+    const snapThreshold = 15; // degrees
 
-    const targetSide = activeLine.startSide === 'left' ? 'right' : 'left';
-    const dots = document.querySelectorAll('.comp-dot');
-    let snapped = false;
-
-    dots.forEach(dot => {
-      if (dot.dataset.type === activeLine.type && 
-          dot.dataset.side === targetSide) {
-        const rect = dot.getBoundingClientRect();
-        const dotCenterX = rect.left + rect.width / 2;
-        const dotCenterY = rect.top + rect.height / 2;
-        
-        const distance = Math.sqrt(
-          Math.pow(e.clientX - dotCenterX, 2) + 
-          Math.pow(e.clientY - dotCenterY, 2)
-        );
-
-        if (distance < 30) {
-          snapped = true;
-          setActiveLine(prev => ({
-            ...prev,
-            end: { x: dotCenterX, y: dotCenterY },
-            snapped: true
-          }));
-        }
+    for (let snapAngle = -180; snapAngle <= 180; snapAngle += 45) {
+      if (Math.abs(angle - snapAngle) < snapThreshold) {
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        const snappedX = startPoint.x + distance * Math.cos(snapAngle * (Math.PI / 180));
+        const snappedY = startPoint.y + distance * Math.sin(snapAngle * (Math.PI / 180));
+        return { x: snappedX, y: snappedY };
       }
-    });
-
-    if (!snapped) {
-      setActiveLine(prev => ({
-        ...prev,
-        end: { x: e.clientX, y: e.clientY },
-        snapped: false
-      }));
     }
+
+    return point;
   };
 
-  const handleMouseUp = (e) => {
-    if (!isDragging) return;
-    
-    if (activeLine?.snapped) {
-      setPersistentLines(prev => [...prev, {
-        start: activeLine.start,
-        end: activeLine.end,
-        type: activeLine.type
-      }]);
-    }
-    
-    setIsDragging(false);
-    setActiveLine(null);
-  };
-
-  useEffect(() => {
-    document.addEventListener('mousemove', handleMouseMove);
-    document.addEventListener('mouseup', handleMouseUp);
-
-    return () => {
-      document.removeEventListener('mousemove', handleMouseMove);
-      document.removeEventListener('mouseup', handleMouseUp);
-    };
-  }, [isDragging, activeLine]);
+  const path = getAnimatedPath();
+  const snappedEndPoint = type === 'student' ? snapToGrid(endPoint) : endPoint;
 
   return (
-    <div className="comp-line">
-      {/* Left stack dots */}
-      {showDots.left && dotPositions.left.top !== null && (
+    <svg className="comp-line">
+      <defs>
+        <filter id="glow">
+          <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+          <feMerge>
+            <feMergeNode in="coloredBlur"/>
+            <feMergeNode in="SourceGraphic"/>
+          </feMerge>
+        </filter>
+      </defs>
+      
+      <line
+        {...path}
+        className={`line ${type} ${animating ? 'animating' : ''}`}
+        style={{
+          '--progress': animationProgress
+        }}
+      />
+      
+      {type === 'student' && (
         <>
-          <div 
-            className="comp-dot"
-            data-type="top"
-            data-side="left"
-            style={{
-              position: 'absolute',
-              left: '33.33%',
-              top: dotPositions.left.top,
-              transform: 'translate(-50%, -50%)'
-            }}
-            onMouseDown={(e) => handleMouseDown(e, 'left', 'top')}
+          <circle 
+            cx={path.x1} 
+            cy={path.y1} 
+            r="4" 
+            className="endpoint start"
           />
-          <div 
-            className="comp-dot"
-            data-type="bottom"
-            data-side="left"
-            style={{
-              position: 'absolute',
-              left: '33.33%',
-              top: dotPositions.left.bottom,
-              transform: 'translate(-50%, -50%)'
-            }}
-            onMouseDown={(e) => handleMouseDown(e, 'left', 'bottom')}
+          <circle 
+            cx={path.x2} 
+            cy={path.y2} 
+            r="4" 
+            className="endpoint end"
           />
         </>
       )}
-
-      {/* Right stack dots */}
-      {showDots.right && dotPositions.right.top !== null && (
-        <>
-          <div 
-            className="comp-dot"
-            data-type="top"
-            data-side="right"
-            style={{
-              position: 'absolute',
-              right: '33.33%',
-              top: dotPositions.right.top,
-              transform: 'translate(50%, -50%)'
-            }}
-            onMouseDown={(e) => handleMouseDown(e, 'right', 'top')}
-          />
-          <div 
-            className="comp-dot"
-            data-type="bottom"
-            data-side="right"
-            style={{
-              position: 'absolute',
-              right: '33.33%',
-              top: dotPositions.right.bottom,
-              transform: 'translate(50%, -50%)'
-            }}
-            onMouseDown={(e) => handleMouseDown(e, 'right', 'bottom')}
-          />
-        </>
-      )}
-
-      {/* SVG container for all lines */}
-      <svg className="comp-line-svg">
-        {persistentLines.map((line, index) => (
-          <line
-            key={index}
-            x1={line.start.x}
-            y1={line.start.y}
-            x2={line.end.x}
-            y2={line.end.y}
-            className="comp-line-path snapped"
-          />
-        ))}
-        
-        {activeLine && (
-          <line
-            x1={activeLine.start.x}
-            y1={activeLine.start.y}
-            x2={activeLine.end.x}
-            y2={activeLine.end.y}
-            className={`comp-line-path ${activeLine.snapped ? 'snapped' : ''}`}
-          />
-        )}
-      </svg>
-    </div>
+    </svg>
   );
 };
 

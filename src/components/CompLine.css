@@ -8,44 +8,60 @@
   z-index: 100;
 }
 
-.comp-dot {
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  pointer-events: auto;
-  cursor: pointer;
-  background: linear-gradient(
-    135deg,
-    rgba(155, 230, 255, 0.9) 0%,
-    rgba(100, 200, 255, 0.8) 50%,
-    rgba(155, 230, 255, 0.7) 100%
-  );
-  backdrop-filter: blur(4px);
-  border: 1px solid rgba(255, 255, 255, 0.4);
-  box-shadow: 
-    inset 0 0 10px rgba(255, 255, 255, 0.5),
-    0 0 15px rgba(155, 230, 255, 0.5);
-  z-index: 101;
+.line {
+  stroke: rgba(155, 230, 255, 0.8);
+  stroke-width: 2;
+  filter: url(#glow);
+  transition: stroke-width 0.2s ease;
 }
 
-.comp-line-svg {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 99;
-}
-
-.comp-line-path {
-  stroke: rgba(155, 230, 255, 0.9);
+.line.student {
   stroke-width: 3;
-  filter: drop-shadow(0 0 8px rgba(155, 230, 255, 0.5));
+  stroke-dasharray: 5;
+  animation: dash 1s linear infinite;
 }
 
-.comp-line-path.snapped {
-  stroke: rgba(155, 230, 255, 1);
+.line.auto {
+  stroke: rgba(255, 200, 100, 0.8);
+}
+
+.line.animating {
+  stroke-dasharray: 10;
+  animation: dash 0.5s linear infinite;
+}
+
+.endpoint {
+  fill: rgba(155, 230, 255, 0.8);
+  filter: url(#glow);
+}
+
+.endpoint.start {
+  animation: pulse 1s ease-in-out infinite;
+}
+
+.endpoint.end {
+  animation: pulse 1s ease-in-out infinite 0.5s;
+}
+
+@keyframes dash {
+  to {
+    stroke-dashoffset: -10;
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.5);
+    opacity: 0.5;
+  }
+}
+
+/* Snapping indicator */
+.line.snapping {
+  stroke: rgba(100, 255, 150, 0.8);
   stroke-width: 4;
-  filter: drop-shadow(0 0 12px rgba(155, 230, 255, 0.7));
 }

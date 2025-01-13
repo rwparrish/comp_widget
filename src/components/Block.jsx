@@ -1,51 +1,26 @@
 import React from 'react';
 import './Block.css';
 
-const Block = ({ color, onDragEnd }) => {
-  const handleDragStart = (e) => {
-    e.dataTransfer.setData('text/plain', '');
-    e.target.classList.add('dragging');
-  };
-
-  const handleDragEnd = (e) => {
-    e.target.classList.remove('dragging');
-    
-    // Get the current mouse position
-    const mouseX = e.clientX;
-    const mouseY = e.clientY;
-    
-    // Get the stack container boundaries
-    const stackElement = e.target.closest('.block-stack');
-    if (!stackElement) return;
-    
-    const stackRect = stackElement.getBoundingClientRect();
-    
-    // Check if the block was dropped outside the stack
-    const isOutside = 
-      mouseX < stackRect.left ||
-      mouseX > stackRect.right ||
-      mouseY < stackRect.top ||
-      mouseY > stackRect.bottom;
-    
-    if (isOutside) {
-      onDragEnd(e);
-    }
-  };
-
+const Block = ({ 
+  size = 60, 
+  color = 'rgba(155, 230, 255, 0.3)',
+  isHighlighted = false 
+}) => {
   return (
     <div 
-      className="block-container"
-      draggable="true"
-      onDragStart={handleDragStart}
-      onDragEnd={handleDragEnd}
+      className={`block-container ${isHighlighted ? 'highlighted' : ''}`}
+      style={{
+        '--block-size': `${size}px`,
+        '--block-color': color
+      }}
     >
       <div className="block">
-        <div className="face front"></div>
-        <div className="face back"></div>
-        <div className="face right"></div>
-        <div className="face left"></div>
-        <div className="face top"></div>
-        <div className="face bottom"></div>
+        <div className="block-face front" />
+        <div className="block-face back" />
+        <div className="block-face right" />
+        <div className="block-face left" />
+        <div className="block-face top" />
+        <div className="block-face bottom" />
       </div>
     </div>
   );
