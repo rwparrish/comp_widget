@@ -17,30 +17,23 @@ const BlockStack = ({ position, blockCount, onBlockAdd, onBlockRemove }) => {
     const rect = container.getBoundingClientRect();
     const clickY = e.clientY - rect.top;
 
-    // Get all blocks
     const blocks = container.getElementsByClassName('block-container');
     if (blocks.length === 0) {
-      // If no blocks, allow click anywhere in container
       onBlockAdd(position);
       return;
     }
 
-    // Get the topmost block's position
     const topBlock = blocks[blocks.length - 1];
     const topBlockRect = topBlock.getBoundingClientRect();
     const topBlockY = topBlockRect.top - rect.top;
 
-    // If click is above the topmost block, add new block
     if (clickY < topBlockY) {
       onBlockAdd(position);
     }
   };
 
-  const handleDragEnd = (index, e) => {
-    const stackElement = e.target.closest('.block-stack');
-    if (!stackElement) {
-      onBlockRemove(position);
-    }
+  const handleBlockRemove = () => {
+    onBlockRemove(position);
   };
 
   return (
@@ -55,7 +48,7 @@ const BlockStack = ({ position, blockCount, onBlockAdd, onBlockRemove }) => {
             <Block 
               key={index} 
               color={COLORS[index]}
-              onDragEnd={(e) => handleDragEnd(index, e)}
+              onDragEnd={handleBlockRemove}
             />
           ))}
         </div>

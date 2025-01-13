@@ -3,8 +3,8 @@ import BlockStack from './components/BlockStack';
 import './App.css';
 
 function App() {
-  const [leftCount, setLeftCount] = useState(2);
-  const [rightCount, setRightCount] = useState(1);
+  const [leftCount, setLeftCount] = useState(0);
+  const [rightCount, setRightCount] = useState(0);
 
   const handleBlockAdd = (position) => {
     if (position === 'left' && leftCount < 10) {
@@ -32,13 +32,13 @@ function App() {
         <BlockStack 
           position="left" 
           blockCount={leftCount}
-          onBlockAdd={() => handleStackClick('left')}
+          onBlockAdd={handleStackClick}
           onBlockRemove={handleBlockRemove}
         />
         <BlockStack 
           position="right" 
           blockCount={rightCount}
-          onBlockAdd={() => handleStackClick('right')}
+          onBlockAdd={handleStackClick}
           onBlockRemove={handleBlockRemove}
         />
       </div>
