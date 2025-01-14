@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
 import BlockStack from './components/BlockStack';
 import CompLine from './components/CompLine';
-import Comparator from './components/Comparator';
 import ControlPanel from './components/ControlPanel';
-import EmptyStateGuide from './components/EmptyStateGuide';
 import './App.css';
 
 function App() {
@@ -11,6 +9,7 @@ function App() {
   const [leftStackCount, setLeftStackCount] = useState(0);
   const [rightStackCount, setRightStackCount] = useState(0);
   const [animatingComparison, setAnimatingComparison] = useState(false);
+  const [comparisonLines, setComparisonLines] = useState([]);
 
   const handleCountChange = (side, newCount) => {
     if (side === 'left') {
@@ -22,7 +21,15 @@ function App() {
 
   const handlePlayAnimation = () => {
     setAnimatingComparison(true);
+    setTimeout(() => {
+      setAnimatingComparison(false);
+    }, 2000);
   };
+
+  // Check if we have both top and bottom lines
+  const hasCompletePair = comparisonLines.length === 2 && 
+    comparisonLines.some(line => line.position === 'top') &&
+    comparisonLines.some(line => line.position === 'bottom');
 
   return (
     <div className="app">
@@ -43,8 +50,12 @@ function App() {
         />
         <CompLine 
           mode={currentMode}
+          leftCount={leftStackCount}
+          rightCount={rightStackCount}
+          isAnimating={animatingComparison}
+          onLinesChange={setComparisonLines}
+          lines={comparisonLines}
         />
-        {leftStackCount === 0 && rightStackCount === 0 && <EmptyStateGuide />}
       </div>
       <ControlPanel 
         currentMode={currentMode}
@@ -52,7 +63,7 @@ function App() {
         leftCount={leftStackCount}
         rightCount={rightStackCount}
         onCountChange={handleCountChange}
-        canPlayAnimation={false}
+        canPlayAnimation={hasCompletePair}
         onPlayAnimation={handlePlayAnimation}
       />
     </div>

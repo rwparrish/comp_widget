@@ -1,12 +1,36 @@
 import React, { useState, useEffect } from 'react';
 import './CompLine.css';
 
-const CompLine = ({ mode }) => {
+const CompLine = ({ 
+  mode, 
+  leftCount, 
+  rightCount, 
+  isAnimating,
+  lines,
+  onLinesChange 
+}) => {
   const [isDrawing, setIsDrawing] = useState(false);
   const [startPoint, setStartPoint] = useState(null);
   const [currentPoint, setCurrentPoint] = useState(null);
   const [dotPosition, setDotPosition] = useState(null);
-  const [lines, setLines] = useState([]);
+  const [showSymbol, setShowSymbol] = useState(false);
+  const [showLines, setShowLines] = useState(true);
+
+  useEffect(() => {
+    if (isAnimating && lines.length > 0) {
+      // Start the animation sequence
+      setTimeout(() => {
+        setShowSymbol(true);
+        // Remove lines after they've shrunk
+        setTimeout(() => {
+          setShowLines(false);
+        }, 500); // Match shrinkLine animation duration
+      }, 100);
+    } else if (!isAnimating) {
+      setShowSymbol(false);
+      setShowLines(true);
+    }
+  }, [isAnimating, lines.length]);
 
   useEffect(() => {
     const handleStartLine = (e) => {
@@ -26,7 +50,7 @@ const CompLine = ({ mode }) => {
         return;
       }
 
-      setLines(prev => [...prev, {
+      onLinesChange(prev => [...prev, {
         start: startPoint,
         end: e.detail,
         position: e.detail.position
@@ -57,6 +81,30 @@ const CompLine = ({ mode }) => {
     };
   }, [isDrawing, dotPosition, startPoint, mode]);
 
+  const getComparisonSymbol = () => {
+    if (leftCount > rightCount) return '>';
+    if (leftCount < rightCount) return '<';
+    return '=';
+  };
+
+  const renderComparisonSymbol = () => {
+    const symbol = getComparisonSymbol();
+    const centerX = window.innerWidth / 2;
+    const centerY = window.innerHeight / 2;
+
+    return (
+      <text
+        x={centerX}
+        y={centerY}
+        className={`comparison-symbol ${showSymbol ? 'visible' : ''}`}
+        textAnchor="middle"
+        dominantBaseline="middle"
+      >
+        {symbol}
+      </text>
+    );
+  };
+
   return (
     <svg className="comparison-lines-container">
       {/* Active drawing line */}
@@ -71,7 +119,7 @@ const CompLine = ({ mode }) => {
       )}
       
       {/* Completed lines */}
-      {lines.map((line, index) => (
+      {!isAnimating && showLines && lines.map((line, index) => (
         <line
           key={index}
           x1={line.start.x}
@@ -81,6 +129,21 @@ const CompLine = ({ mode }) => {
           className={`comparison-line complete ${line.position}`}
         />
       ))}
+
+      {/* Animating lines */}
+      {isAnimating && showLines && lines.map((line, index) => (
+        <line
+          key={index}
+          x1={line.start.x}
+          y1={line.start.y}
+          x2={line.end.x}
+          y2={line.end.y}
+          className={`comparison-line shrinking ${line.position}`}
+        />
+      ))}
+
+      {/* Comparison Symbol */}
+      {renderComparisonSymbol()}
     </svg>
   );
 };

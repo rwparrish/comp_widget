@@ -24,6 +24,46 @@
   animation: snapLine 0.3s ease-out forwards;
 }
 
+.comparison-line.shrinking {
+  animation: shrinkToCenter 0.5s ease-out forwards;
+}
+
+.comparison-symbol {
+  font-size: 48px;
+  fill: rgba(155, 230, 255, 0.8);
+  filter: drop-shadow(0 0 10px rgba(155, 230, 255, 0.5));
+  opacity: 0;
+  transform: scale(0.5);
+}
+
+.comparison-symbol.visible {
+  animation: fadeInSymbol 0.3s ease-out forwards;
+}
+
+@keyframes shrinkToCenter {
+  0% {
+    stroke-width: 3;
+    opacity: 1;
+    transform: translate(0, 0) scale(1);
+  }
+  100% {
+    stroke-width: 0;
+    opacity: 0;
+    transform: translate(50%, 50%) scale(0);
+  }
+}
+
+@keyframes fadeInSymbol {
+  0% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
 @keyframes dash {
   to {
     stroke-dashoffset: -10;

@@ -10,78 +10,108 @@ const BlockStack = ({
   onBlockCountChange,
   className
 }) => {
+  const [isDragging, setIsDragging] = useState(false);
+
+  const handleStackClick = (e) => {
+    if (mode !== 'addRemove' || count >= maxBlocks) return;
+    
+    const rect = e.currentTarget.getBoundingClientRect();
+    const clickY = e.clientY - rect.top;
+    const upperAreaHeight = rect.height * 0.3;
+
+    if (clickY < upperAreaHeight) {
+      onBlockCountChange(count + 1);
+    }
+  };
+
+  const handleBlockDragStart = (e, index) => {
+    if (mode !== 'addRemove') return;
+    setIsDragging(true);
+  };
+
+  const handleBlockDragEnd = (e, index) => {
+    if (!isDragging) return;
+    setIsDragging(false);
+    onBlockCountChange(count - 1);
+  };
+
+  const handleDotMouseDown = (e, position) => {
+    if (mode !== 'drawCompare') return;
+    e.stopPropagation();
+    const rect = e.currentTarget.getBoundingClientRect();
+    const event = new CustomEvent('startLine', {
+      detail: {
+        x: rect.left + rect.width / 2,
+        y: rect.top + rect.height / 2,
+        position
+      },
+      bubbles: true
+    });
+    e.currentTarget.dispatchEvent(event);
+  };
+
+  const handleDotMouseUp = (e, position) => {
+    if (mode !== 'drawCompare') return;
+    e.stopPropagation();
+    const rect = e.currentTarget.getBoundingClientRect();
+    const event = new CustomEvent('endLine', {
+      detail: {
+        x: rect.left + rect.width / 2,
+        y: rect.top + rect.height / 2,
+        position
+      },
+      bubbles: true
+    });
+    e.currentTarget.dispatchEvent(event);
+  };
+
   return (
     <div className={`block-stack ${className}`}>
-      <div className="blocks-wrapper">
+      <div 
+        className="blocks-wrapper"
+        onClick={handleStackClick}
+      >
+        {mode === 'addRemove' && count < maxBlocks && (
+          <div className="add-block-hint">
+            Click here to add a block
+          </div>
+        )}
         <div className="blocks-container">
           {mode === 'drawCompare' && count > 0 && (
             <div 
               className="comparison-dot top"
               data-position="top"
-              onMouseDown={(e) => {
-                e.stopPropagation();
-                const rect = e.currentTarget.getBoundingClientRect();
-                const event = new CustomEvent('startLine', {
-                  detail: {
-                    x: rect.left + rect.width / 2,
-                    y: rect.top + rect.height / 2,
-                    position: 'top'
-                  },
-                  bubbles: true
-                });
-                e.currentTarget.dispatchEvent(event);
-              }}
-              onMouseUp={(e) => {
-                e.stopPropagation();
-                const rect = e.currentTarget.getBoundingClientRect();
-                const event = new CustomEvent('endLine', {
-                  detail: {
-                    x: rect.left + rect.width / 2,
-                    y: rect.top + rect.height / 2,
-                    position: 'top'
-                  },
-                  bubbles: true
-                });
-                e.currentTarget.dispatchEvent(event);
-              }}
+              onMouseDown={(e) => handleDotMouseDown(e, 'top')}
+              onMouseUp={(e) => handleDotMouseUp(e, 'top')}
+              onMouseEnter={(e) => handleDotMouseUp(e, 'top')}
             />
           )}
           {Array(count).fill(null).map((_, index) => (
-            <Block key={index} />
+            <div
+              key={index}
+              className="block-wrapper"
+              draggable={mode === 'addRemove'}
+              onDragStart={(e) => handleBlockDragStart(e, index)}
+              onDragEnd={(e) => handleBlockDragEnd(e, index)}
+            >
+              <Block />
+            </div>
           ))}
           {mode === 'drawCompare' && count > 0 && (
             <div 
               className="comparison-dot bottom"
               data-position="bottom"
-              onMouseDown={(e) => {
-                e.stopPropagation();
-                const rect = e.currentTarget.getBoundingClientRect();
-                const event = new CustomEvent('startLine', {
-                  detail: {
-                    x: rect.left + rect.width / 2,
-                    y: rect.top + rect.height / 2,
-                    position: 'bottom'
-                  },
-                  bubbles: true
-                });
-                e.currentTarget.dispatchEvent(event);
-              }}
-              onMouseUp={(e) => {
-                e.stopPropagation();
-                const rect = e.currentTarget.getBoundingClientRect();
-                const event = new CustomEvent('endLine', {
-                  detail: {
-                    x: rect.left + rect.width / 2,
-                    y: rect.top + rect.height / 2,
-                    position: 'bottom'
-                  },
-                  bubbles: true
-                });
-                e.currentTarget.dispatchEvent(event);
-              }}
+              onMouseDown={(e) => handleDotMouseDown(e, 'bottom')}
+              onMouseUp={(e) => handleDotMouseUp(e, 'bottom')}
+              onMouseEnter={(e) => handleDotMouseUp(e, 'bottom')}
             />
           )}
         </div>
+        {mode === 'addRemove' && count > 0 && (
+          <div className="remove-block-hint">
+            Drag blocks away to remove them
+          </div>
+        )}
       </div>
     </div>
   );
