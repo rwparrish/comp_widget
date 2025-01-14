@@ -149,3 +149,18 @@
     transform: translateX(-50%) translateY(0);
   }
 }
+
+.add-block-hint.clickable {
+  pointer-events: auto;
+  cursor: pointer;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.add-block-hint.clickable:hover {
+  transform: translateX(-50%) scale(1.05);
+  background: rgba(155, 230, 255, 0.2);
+}
+
+.add-block-hint.clickable:active {
+  transform: translateX(-50%) scale(0.95);
+}

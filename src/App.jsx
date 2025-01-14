@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import BlockStack from './components/BlockStack';
 import CompLine from './components/CompLine';
 import ControlPanel from './components/ControlPanel';
+import ValueDisplay from './components/ValueDisplay';
 import './App.css';
 
 function App() {
@@ -57,13 +58,21 @@ function App() {
           lines={comparisonLines}
         />
       </div>
+      <div className="values-container">
+        <div className="value-left">
+          <ValueDisplay value={leftStackCount} />
+        </div>
+        <div className="value-right">
+          <ValueDisplay value={rightStackCount} />
+        </div>
+      </div>
       <ControlPanel 
         currentMode={currentMode}
         onModeChange={setCurrentMode}
         leftCount={leftStackCount}
         rightCount={rightStackCount}
         onCountChange={handleCountChange}
-        canPlayAnimation={hasCompletePair}
+        canPlayAnimation={comparisonLines.length === 2}
         onPlayAnimation={handlePlayAnimation}
       />
     </div>

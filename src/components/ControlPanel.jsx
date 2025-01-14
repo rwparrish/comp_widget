@@ -28,7 +28,7 @@ const ControlPanel = ({
             <input
               type="number"
               min="0"
-              max="9"
+              max="10"
               value={leftCount}
               onChange={(e) => handleCountChange('left', e.target.value)}
               disabled={currentMode !== 'addRemove'}
@@ -39,7 +39,7 @@ const ControlPanel = ({
             <input
               type="number"
               min="0"
-              max="9"
+              max="10"
               value={rightCount}
               onChange={(e) => handleCountChange('right', e.target.value)}
               disabled={currentMode !== 'addRemove'}

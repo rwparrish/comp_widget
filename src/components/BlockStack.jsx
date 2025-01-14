@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Block from './Block';
 import './BlockStack.css';
+import ValueDisplay from './ValueDisplay';
 
 const BlockStack = ({ 
   count,
@@ -12,14 +13,9 @@ const BlockStack = ({
 }) => {
   const [isDragging, setIsDragging] = useState(false);
 
-  const handleStackClick = (e) => {
-    if (mode !== 'addRemove' || count >= maxBlocks) return;
-    
-    const rect = e.currentTarget.getBoundingClientRect();
-    const clickY = e.clientY - rect.top;
-    const upperAreaHeight = rect.height * 0.3;
-
-    if (clickY < upperAreaHeight) {
+  const handleAddBlockClick = (e) => {
+    e.stopPropagation();
+    if (mode === 'addRemove' && count < maxBlocks) {
       onBlockCountChange(count + 1);
     }
   };
@@ -67,12 +63,12 @@ const BlockStack = ({
 
   return (
     <div className={`block-stack ${className}`}>
-      <div 
-        className="blocks-wrapper"
-        onClick={handleStackClick}
-      >
+      <div className="blocks-wrapper">
         {mode === 'addRemove' && count < maxBlocks && (
-          <div className="add-block-hint">
+          <div 
+            className="add-block-hint clickable"
+            onClick={handleAddBlockClick}
+          >
             Click here to add a block
           </div>
         )}

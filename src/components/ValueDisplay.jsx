@@ -1,9 +1,9 @@
 import React from 'react';
 import './ValueDisplay.css';
 
-const ValueDisplay = ({ value, position }) => {
+const ValueDisplay = ({ value }) => {
   return (
-    <div className={`value-display ${position}`}>
+    <div className="value-display">
       {value}
     </div>
   );

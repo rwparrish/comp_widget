@@ -1,19 +1,12 @@
 .value-display {
-    font-size: 48px;
-    color: rgba(155, 230, 255, 0.9);
-    text-align: center;
-    font-weight: bold;
-    text-shadow: 0 0 10px rgba(155, 230, 255, 0.5);
-    position: absolute;
-    bottom: -80px;
-    transform: translateX(-50%);
-    z-index: 1;
-  }
-  
-  .value-display.left {
-    left: 33.33%;
-  }
-  
-  .value-display.right {
-    left: 66.67%;
-  }
+  background: rgba(155, 230, 255, 0.1);
+  color: rgba(155, 230, 255, 0.9);
+  padding: 8px 24px;
+  border-radius: 20px;
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+  min-width: 40px;
+  box-shadow: 0 0 15px rgba(155, 230, 255, 0.2);
+  backdrop-filter: blur(5px);
+}

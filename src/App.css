@@ -1,4 +1,3 @@
-
 .block-stacks-container {
   position: absolute;
   top: 0;
@@ -47,4 +46,22 @@
 
 .block-stacks-container::after {
   right: 33.33%;
+}
+
+.values-container {
+  position: absolute;
+  bottom: 100px; /* Adjust this value to position above control panel */
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 calc(33.33% - 100px); /* Align with stacks */
+  z-index: 2;
+}
+
+.value-left,
+.value-right {
+  display: flex;
+  justify-content: center;
+  width: 200px; /* Match stack width */
 }
