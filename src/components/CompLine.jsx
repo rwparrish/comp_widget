@@ -17,6 +17,19 @@ const CompLine = ({
   const [showLines, setShowLines] = useState(true);
 
   useEffect(() => {
+    if (mode !== 'drawCompare') {
+      // Clear lines when leaving compare mode
+      onLinesChange([]);
+      setShowSymbol(false);
+      setShowLines(true);
+      setIsDrawing(false);
+      setStartPoint(null);
+      setCurrentPoint(null);
+      setDotPosition(null);
+    }
+  }, [mode, onLinesChange]);
+
+  useEffect(() => {
     if (isAnimating && lines.length > 0) {
       // Start the animation sequence
       setTimeout(() => {
@@ -104,6 +117,10 @@ const CompLine = ({
       </text>
     );
   };
+
+  if (mode !== 'drawCompare' && !isAnimating) {
+    return null;
+  }
 
   return (
     <svg className="comparison-lines-container">
