@@ -39,6 +39,8 @@
   transform: translateX(-50%);
   box-shadow: 0 0 10px rgba(155, 230, 255, 0.5);
   z-index: 2;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .comparison-dot.top {
@@ -75,4 +77,19 @@
     transform: translate(-50%, -50%) scale(0.8);
     opacity: 0.5;
   }
+}
+
+.comparison-dot.active {
+  transform: translateX(-50%) scale(1.2);
+  box-shadow: 0 0 15px rgba(155, 230, 255, 0.8);
+}
+
+.comparison-dot.snap {
+  animation: snapDot 0.3s ease-out;
+}
+
+@keyframes snapDot {
+  0% { transform: translateX(-50%) scale(1.2); }
+  50% { transform: translateX(-50%) scale(1.4); }
+  100% { transform: translateX(-50%) scale(1); }
 }

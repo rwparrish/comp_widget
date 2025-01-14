@@ -1,46 +1,27 @@
-.comp-line {
-  position: absolute;
+.comparison-lines-container {
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
   pointer-events: none;
-  z-index: 100;
+  z-index: 1;
 }
 
-.line {
+.comparison-line {
   stroke: rgba(155, 230, 255, 0.8);
   stroke-width: 2;
-  filter: url(#glow);
-  transition: stroke-width 0.2s ease;
+  pointer-events: none;
 }
 
-.line.student {
-  stroke-width: 3;
-  stroke-dasharray: 5;
+.comparison-line.drawing {
+  stroke-dasharray: 5,5;
   animation: dash 1s linear infinite;
 }
 
-.line.auto {
-  stroke: rgba(255, 200, 100, 0.8);
-}
-
-.line.animating {
-  stroke-dasharray: 10;
-  animation: dash 0.5s linear infinite;
-}
-
-.endpoint {
-  fill: rgba(155, 230, 255, 0.8);
-  filter: url(#glow);
-}
-
-.endpoint.start {
-  animation: pulse 1s ease-in-out infinite;
-}
-
-.endpoint.end {
-  animation: pulse 1s ease-in-out infinite 0.5s;
+.comparison-line.complete {
+  stroke-width: 3;
+  animation: snapLine 0.3s ease-out forwards;
 }
 
 @keyframes dash {
@@ -49,19 +30,13 @@
   }
 }
 
-@keyframes pulse {
-  0%, 100% {
-    transform: scale(1);
-    opacity: 1;
+@keyframes snapLine {
+  0% {
+    stroke-dasharray: 5,5;
+    stroke-width: 2;
   }
-  50% {
-    transform: scale(1.5);
-    opacity: 0.5;
+  100% {
+    stroke-dasharray: 0,0;
+    stroke-width: 3;
   }
-}
-
-/* Snapping indicator */
-.line.snapping {
-  stroke: rgba(100, 255, 150, 0.8);
-  stroke-width: 4;
 }

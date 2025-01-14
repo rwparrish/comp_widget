@@ -10,7 +10,6 @@ function App() {
   const [currentMode, setCurrentMode] = useState('none');
   const [leftStackCount, setLeftStackCount] = useState(0);
   const [rightStackCount, setRightStackCount] = useState(0);
-  const [comparisonLines, setComparisonLines] = useState([]);
   const [animatingComparison, setAnimatingComparison] = useState(false);
 
   const handleCountChange = (side, newCount) => {
@@ -22,43 +21,38 @@ function App() {
   };
 
   const handlePlayAnimation = () => {
-    if (comparisonLines.length > 0) {
-      setAnimatingComparison(true);
-    }
+    setAnimatingComparison(true);
   };
 
   return (
     <div className="app">
       <div className="block-stacks-container">
-        <BlockStack
+        <BlockStack 
           className="left-stack"
-          side="left"
           count={leftStackCount}
           position="left"
           mode={currentMode}
           onBlockCountChange={(count) => handleCountChange('left', count)}
         />
-        <BlockStack
+        <BlockStack 
           className="right-stack"
-          side="right"
           count={rightStackCount}
           position="right"
           mode={currentMode}
           onBlockCountChange={(count) => handleCountChange('right', count)}
         />
-        <CompLine
-          lines={comparisonLines}
-          animating={animatingComparison}
+        <CompLine 
+          mode={currentMode}
         />
         {leftStackCount === 0 && rightStackCount === 0 && <EmptyStateGuide />}
       </div>
-      <ControlPanel
+      <ControlPanel 
         currentMode={currentMode}
         onModeChange={setCurrentMode}
         leftCount={leftStackCount}
         rightCount={rightStackCount}
         onCountChange={handleCountChange}
-        canPlayAnimation={comparisonLines.length > 0 && !animatingComparison}
+        canPlayAnimation={false}
         onPlayAnimation={handlePlayAnimation}
       />
     </div>
