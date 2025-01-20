@@ -72,7 +72,7 @@ function App() {
         leftCount={leftStackCount}
         rightCount={rightStackCount}
         onCountChange={handleCountChange}
-        canPlayAnimation={comparisonLines.length === 2}
+        canPlayAnimation={hasCompletePair}
         onPlayAnimation={handlePlayAnimation}
       />
     </div>

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Block from './Block';
 import './BlockStack.css';
-import ValueDisplay from './ValueDisplay';
+
 
 const BlockStack = ({ 
   count,
