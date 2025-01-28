@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import BlockStack from './components/BlockStack';
 import CompLine from './components/CompLine';
 import ControlPanel from './components/ControlPanel';
@@ -11,6 +11,15 @@ function App() {
   const [rightStackCount, setRightStackCount] = useState(0);
   const [animatingComparison, setAnimatingComparison] = useState(false);
   const [comparisonLines, setComparisonLines] = useState([]);
+  const [showPrompt, setShowPrompt] = useState(true);
+
+  useEffect(() => {
+    if (currentMode !== 'none') {
+      setShowPrompt(false);
+    }
+  }, [currentMode]);
+
+  console.log("hello")
 
   const handleCountChange = (side, newCount) => {
     if (side === 'left') {
@@ -34,6 +43,11 @@ function App() {
 
   return (
     <div className="app">
+      {currentMode === 'none' && showPrompt && (
+        <div className="mode-prompt">
+          Please select a mode from the control panel to begin
+        </div>
+      )}
       <div className="block-stacks-container">
         <BlockStack 
           className="left-stack"
